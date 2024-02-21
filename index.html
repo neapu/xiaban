@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下班</title>
+</head>
+
+<body>
+    <p>现在是: <span id="current-time"></span></p>
+    <p>距离下班还有: <span id="xiaban"></span></p>
+
+    <script>
+        function getCurrentDateTime() {
+            const now = new Date();
+
+            // 获取年月日时分秒
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            // 格式化为 yyyy-mm-dd hh:mm:ss
+            const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            return formattedDateTime;
+        }
+
+        // 返回格式： xx分xx秒
+        function getXiaban() {
+            const now = new Date();
+            
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // 下班时间
+            const xiabanTime = new Date(now);
+            xiabanTime.setHours(17);
+            xiabanTime.setMinutes(30);
+            xiabanTime.setSeconds(0);
+
+            // 计算距离下班还有多少时间
+            const timeDiff = xiabanTime - now;
+            const timeDiffSeconds = Math.floor(timeDiff / 1000);
+            const timeDiffMinutes = Math.floor(timeDiffSeconds / 60);
+            const timeDiffSecondsLeft = timeDiffSeconds % 60;
+
+            if (timeDiffMinutes < 0) {
+                return `赶紧下班，不要浪费公司的电!
+                距离下班已经过去了 ${-timeDiffMinutes}分${-timeDiffSecondsLeft}秒了！`;
+            }
+            return `${timeDiffMinutes}分${timeDiffSecondsLeft}秒`;
+        }
+
+        function updateCurrentTime() {
+            const currentDateTime = getCurrentDateTime();
+            const currentTimeElement = document.getElementById('current-time');
+            currentTimeElement.textContent = currentDateTime;
+
+            const xiaban = getXiaban();
+            const xiabanElement = document.getElementById('xiaban');
+            xiabanElement.textContent = xiaban;
+        }
+
+        // 每秒更新一次
+        setInterval(updateCurrentTime, 1000);
+    </script>
+</body>
+
+</html>
